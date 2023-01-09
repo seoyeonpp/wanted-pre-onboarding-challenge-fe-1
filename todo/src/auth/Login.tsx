@@ -9,25 +9,33 @@ function Login() {
     // 유효성 검사
     const [errorId, setErrorId] = useState<boolean>(false);
     const [errorPw, setErrorPw] = useState<boolean>(false);
-    let msg = "";
+    const [msg, setMsg] = useState('');
 
     // id input change 이벤트
     const onChangeId = (event: React.FormEvent<HTMLInputElement>) => {
         const { currentTarget: { value } } = event;
         setId(value);
         const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g;
-        regEx.test(value) ? setErrorId(false) : setErrorId(true);
-
+        if (regEx.test(value)) {
+            setErrorId(false);
+            setMsg('');
+        } else {
+            setErrorId(true);
+            setMsg('이메일 형식에 맞지 않습니다.');
+        }
         errorId === false && errorPw === false ? setIsDisabled(false) : setIsDisabled(true);
     };
     // pw input change 이벤트
     const onChangePw = (event: React.FormEvent<HTMLInputElement>) => {
         const { currentTarget: { value } } = event;
         setPw(value);
-        if (pw.length > 7) {
+        if (pw.length >= 6) {
             setErrorPw(false);
-        } else { setErrorPw(true) }
-
+            setMsg('');
+        } else {
+            setErrorPw(true);
+            setMsg('비밀번호는 8자리 이상이어야 합니다.');
+        }
         errorId === false && errorPw === false ? setIsDisabled(false) : setIsDisabled(true);
     };
 
@@ -35,11 +43,9 @@ function Login() {
     // 로그인 시
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('id 에러' + errorId)
-        console.log('pw 에러' + errorPw)
-        test();
+        loginFn();
     };
-    async function test() {
+    async function loginFn() {
         const data = {
             "email": id,
             "password": pw
@@ -55,22 +61,23 @@ function Login() {
         let resJson = await res.json();
         try {
             console.log("resJson :: ", resJson);
-            msg = resJson.details;
+            setMsg(resJson.message);
         } catch (err) {
+            setMsg('로그인 실패');
             console.log(err)
         }
     }
 
     return (
-        <div>
-            <h1>로그인하세요</h1>
+        <>
+            <h2>로그인하세요</h2>
             <form onSubmit={onSubmit}>
                 <input value={id} onChange={onChangeId} type="text" placeholder="이메일" />
                 <input value={pw} onChange={onChangePw} type="password" placeholder="비밀번호" />
                 <button disabled={isDisabled}>제출</button>
             </form>
-            {msg !== '' ? msg : null}
-        </div>
+            {msg && <p>{msg}</p>}
+        </>
     );
 }
 
