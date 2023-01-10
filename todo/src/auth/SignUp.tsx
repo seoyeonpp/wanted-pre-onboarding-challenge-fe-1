@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 function SignUp() {
     // id,pw, 버튼 비활성화
@@ -10,6 +11,9 @@ function SignUp() {
     const [errorId, setErrorId] = useState<boolean>(false);
     const [errorPw, setErrorPw] = useState<boolean>(false);
     const [msg, setMsg] = useState('');
+
+    // router
+    const navigate = useNavigate();
 
     // id input change 이벤트
     const onChangeId = (event: React.FormEvent<HTMLInputElement>) => {
@@ -50,7 +54,7 @@ function SignUp() {
             "email": id,
             "password": pw
         }
-        let res = await fetch("http://localhost:8080/users/create", {
+        const res = await fetch("http://localhost:8080/users/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,10 +62,12 @@ function SignUp() {
             body: JSON.stringify(data),
         });
 
-        let resJson = await res.json();
+        const resJson = await res.json();
         try {
             console.log("resJson :: ", resJson);
-            setMsg(resJson.message);
+            // setMsg(resJson.message);
+            alert(resJson.message);
+            navigate('/auth');
         } catch (err) {
             setMsg('회원가입 실패');
             console.log(err)
@@ -77,6 +83,11 @@ function SignUp() {
                 <button disabled={isDisabled}>회원가입</button>
             </form>
             {msg && <p>{msg}</p>}
+            <p>
+                <Link to={{
+                    pathname: '/auth',
+                }}>로그인하러가기</Link>
+            </p>
         </>
     );
 }

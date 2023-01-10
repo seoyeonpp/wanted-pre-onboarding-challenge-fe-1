@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     // id,pw, 버튼 비활성화
@@ -10,6 +11,9 @@ function Login() {
     const [errorId, setErrorId] = useState<boolean>(false);
     const [errorPw, setErrorPw] = useState<boolean>(false);
     const [msg, setMsg] = useState('');
+
+    // router
+    const navigate = useNavigate();
 
     // id input change 이벤트
     const onChangeId = (event: React.FormEvent<HTMLInputElement>) => {
@@ -61,9 +65,11 @@ function Login() {
         let resJson = await res.json();
         try {
             console.log("resJson :: ", resJson);
-            setMsg(resJson.message);
+            // setMsg(resJson.message);
+            alert(resJson.message);
+            localStorage.setItem('login-token', resJson.token);
+            navigate('/todo');
         } catch (err) {
-            setMsg('로그인 실패');
             console.log(err)
         }
     }
