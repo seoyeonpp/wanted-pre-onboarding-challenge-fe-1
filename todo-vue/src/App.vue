@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Login/>
+    <Login @update="writeFn"/>
   </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
   name: 'App',
   components: {
     Login
+  },
+  methods : {
+    writeFn : () => {
+      document.write('emit예제')
+    }
   }
 }
 </script>
