@@ -1,26 +1,34 @@
 <template>
   <div>
-    <h1 @click="clickEv">{{ title }}</h1>
-    <!-- <h1>{{ changeTitle }}</h1> -->
+    <table>
+      <thead>
+        <tr>
+          <td>이름</td>
+          <td>휴대폰번호</td>
+          <td>회원번호</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
 export default {
   data: () => ({
-    title: 'Login'
+    
   }),
   methods: {
-    clickEv(){
-      // this.$emit('update');
-      // this.title = 'Click h1'
-      this.$set(this.$data, 'title', new Date().toTimeString())
-    }
+    
   },
   computed: {
-    changeTitle () {
-      return this.title;
-    }
+    
   },
   // vue instance life cycle
   beforeCreate() {
@@ -34,7 +42,6 @@ export default {
   },
   mounted() {
     console.log("mounted");
-    // this.$set(this.$data, 'title', 'mounted될때 타이틀 바뀜');
   },
   beforeUpdate() {
     console.log("beforeUpdate");
